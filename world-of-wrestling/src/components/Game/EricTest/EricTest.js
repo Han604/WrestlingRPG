@@ -1,6 +1,41 @@
 import React from 'react';
 import styled from 'styled-components';
 const EricTest = () => {
+  const [PLAYER_POS, SET_PLAYER_POS] = React.useState({x:1, y:1})
+  const [PLAYER_PATH, SET_PLAYER_PATH] = React.useState([])
+
+  const distance = (boxX, boxY, PLAYER_POS) => {
+    const pathArray = []
+    const {x, y} = PLAYER_POS;
+    const X_DISTANCE = Math.abs(boxX - x);
+    const Y_DISTANCE = Math.abs(boxY - y);
+    console.log(X_DISTANCE + Y_DISTANCE, 'total-distance')
+    console.log(X_DISTANCE, 'x distance')
+    console.log(Y_DISTANCE, 'y distance')
+    for(let i = Y_DISTANCE; i > 0; i -= 1) {
+      console.log('ding')
+      if (boxY > PLAYER_POS.y) {
+        pathArray.push({...PLAYER_POS, y: PLAYER_POS.y - 1})
+        // SET_PLAYER_PATH([...PLAYER_PATH, {...PLAYER_POS, y: PLAYER_POS.y + 1}])
+      } else if (boxY < PLAYER_POS.y) {
+        pathArray.push({...PLAYER_POS, y: PLAYER_POS.y + 1})
+        // SET_PLAYER_PATH([...PLAYER_PATH, {...PLAYER_POS, y: PLAYER_POS.y + 1}])
+      } 
+    }
+    for(let i = X_DISTANCE; i > 0; i -= 1) {
+      if (boxX > PLAYER_POS.X) {
+        pathArray.push({...PLAYER_POS, x: PLAYER_POS.x + 1})
+        // SET_PLAYER_PATH([...PLAYER_PATH, {...PLAYER_POS, x: PLAYER_POS.x + 1}])
+      } else if (boxX < PLAYER_POS.x) {
+        pathArray.push({...PLAYER_POS, x: PLAYER_POS.x - 1})
+        // SET_PLAYER_PATH([...PLAYER_PATH, {...PLAYER_POS, x: PLAYER_POS.x - 1}])
+      } 
+    }
+    SET_PLAYER_PATH(pathArray)
+  }
+
+  console.log(PLAYER_PATH)
+
   const mapGrid = [
     [
       { x: 1, y: 1 },
@@ -129,15 +164,25 @@ const EricTest = () => {
         return (
           <div key={idx} style={{display:'flex'}}>
             {row.map((sq) => {
-              return (
-                <Box
+              if(sq.x === PLAYER_POS.x && sq.y === PLAYER_POS.y) {
+                return (
+                  <Player/>
+                )
+              } else if (PLAYER_PATH.includes(item => item === sq)){
+                  return <Path/>
+              }else {
+                return (
+                  <Box
                   key={Math.random() * 100000}
                   style={{ border: '1px solid black' }}
-                >
+                  onClick = {() => SET_PLAYER_POS({x: sq.x, y: sq.y})}
+                  onMouseEnter = {() => distance(sq.x, sq.y, PLAYER_POS)}
+                  >
                   {sq.x},
                   {sq.y}
                 </Box>
-              );
+                )}
+              ;
             })}
           </div>
         );
@@ -154,11 +199,27 @@ const Box = styled.div`
   width: 50px;
   height: 50px;
   background-color: grey;
-  border: 3px solid black;
+  border: 1px solid black;
   opacity: 0.5;
   :hover {
-    border: 5px solid white;
+    border: 1px solid black;
     opacity: 0.8;
   }
+`
+
+const Player = styled.div`
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  outline: 1px solid black;
+  opacity: 0.8;
 `;
+const Path = styled.div`
+  width: 50px;
+  height: 50px;
+  background-color: yellow;
+  outline: 1px solid black;
+  opacity: 0.8;
+`;
+
 export default EricTest;
