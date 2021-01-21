@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "immer": "^6.0.5",
+    "immer": "^8.0.1",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "styled-components": "^5.1.0"
